@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coinbase Wallet Dashboard</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg: #0b0b0d;
+  --panel: #16171b;
+  --card: #202127;
+  --text: #ffffff;
+  --muted: #8e929c;
+  --line: #2b2c32;
+  --blue: #3861f5;
+  --green: #45d483;
+}
+
+body.light {
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --card: #eef1f7;
+  --text: #17191f;
+  --muted: #737987;
+  --line: #e1e5ed;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
+  transition: background .2s, color .2s;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.app {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 20px 20px 100px;
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 35px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1652f0;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--panel);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+/* Balance */
+
+.balance-section {
+  margin-bottom: 30px;
+}
+
+.small-label {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.balance-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.balance {
+  font-size: 39px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+}
+
+.eye {
+  background: transparent;
+  color: var(--muted);
+  font-size: 21px;
+}
+
+.change {
+  margin-top: 10px;
+  color: var(--green);
+  font-size: 14px;
+}
+
+/* Actions */
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  font-size: 13px;
+}
+
+.action-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 27px;
+}
+
+/* Assets */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-heading h2 {
+  font-size: 21px;
+}
+
+.text-btn {
+  background: transparent;
+  color: #6e91ff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  gap: 27px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+
+.tab {
+  padding: 12px 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.tab.active {
+  color: var(--text);
+  border-bottom: 2px solid var(--blue);
+  font-weight: 600;
+}
+
+.coin-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.coin {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.coin-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.btc { background: #f7931a; }
+.eth { background: #627eea; }
+.usdc { background: #2775ca; }
+.sol { background: #7c4dff; }
+.trx { background: #e50924; }
+
+.coin-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.coin-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.coin-amount {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.coin-value {
+  text-align: right;
+}
+
+.coin-usd {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.coin-change {
+  font-size: 12px;
+  color: var(--green);
+}
+
+/* Activity */
+
+.activity {
+  margin-top: 32px;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel);
+  border-radius: 15px;
+  padding: 17px;
+}
+
+.activity-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-info strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.activity-info span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.activity-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Bottom navigation */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 460px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+  z-index: 5;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.nav-item span:first-child {
+  font-size: 22px;
+}
+
+.nav-item.active {
+  color: #6e91ff;
+}
+
+/* Modal */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 25px;
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+}
+
+.modal-box h2 {
+  margin-bottom: 12px;
+  font-size: 22px;
+}
+
+.modal-box p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-close {
+  width: 100%;
+  padding: 14px;
+  background: var(--blue);
+  color: white;
+  border-radius: 12px;
+  margin-top: 22px;
+  font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">₿</div>
+      <span>Wallet</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <span id="themeIcon">☼</span>
+      </button>
+
+      <button class="icon-btn" onclick="showModal('Settings')">
+        ⚙
+      </button>
+    </div>
+  </header>
+
+  <section class="balance-section">
+    <div class="small-label">Total balance</div>
+
+    <div class="balance-line">
+      <div class="balance" id="totalBalance">$15,841.02</div>
+      <button class="eye" onclick="toggleBalance()" id="eyeBtn">◉</button>
+    </div>
+
+    <div class="change">↑ 2.45% today</div>
+  </section>
+
+  <section class="actions">
+    <button class="action" onclick="showModal('Buy')">
+      <span class="action-icon">＋</span>
+      <span>Buy</span>
+    </button>
+
+    <button class="action" onclick="showModal('Swap')">
+      <span class="action-icon">⇄</span>
+      <span>Swap</span>
+    </button>
+
+    <button class="action" onclick="showModal('Send')">
+      <span class="action-icon">↗</span>
+      <span>Send</span>
+    </button>
+
+    <button class="action" onclick="showModal('Receive')">
+      <span class="action-icon">↙</span>
+      <span>Receive</span>
+    </button>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2>Your assets</h2>
+      <button class="text-btn" onclick="showModal('All assets')">
+        See all
+      </button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this,'Crypto')">
+        Crypto
+      </button>
+      <button class="tab" onclick="setTab(this,'NFTs')">
+        NFTs
+      </button>
+      <button class="tab" onclick="setTab(this,'DeFi')">
+        DeFi
+      </button>
+    </div>
+
+    <div class="coin-list" id="coinList">
+
+      <div class="coin">
+        <div class="coin-logo btc">₿</div>
+        <div class="coin-info">
+          <div class="coin-name">Bitcoin</div>
+          <div class="coin-amount">0.1528 BTC</div>
+        </div>
+        <div class="coin-value">
+          <div class="coin-usd">$4,523.69</div>
+          <div class="coin-change">+2.1%</div>
+        </div>
+      </div>
+
+      <div class="coin">
+        <div class="coin-logo eth">◆</div>
+        <div class="coin-info">
+          <div class="coin-name">Ethereum</div>
+          <div class="coin-amount">3.7129 ETH</div>
+        </div>
+        <div class="coin-value">
+          <div class="coin-usd">$6,824.94</div>
+          <div class="coin-change">+1.8%</div>
+        </div>
+      </div>
+
+      <div class="coin">
+        <div class="coin-logo usdc">$</div>
+        <div class="coin-info">
+          <div class="coin-name">USD Coin</div>
+          <div class="coin-amount">2,284.41 USDC</div>
+        </div>
+        <div class="coin-value">
+          <div class="coin-usd">$2,284.41</div>
+          <div class="coin-change">0.0%</div>
+        </div>
+      </div>
+
+      <div class="coin">
+        <div class="coin-logo sol">S</div>
+        <div class="coin-info">
+          <div class="coin-name">Solana</div>
+          <div class="coin-amount">12.5 SOL</div>
+        </div>
+        <div class="coin-value">
+          <div class="coin-usd">$1,875.00</div>
+          <div class="coin-change">+3.4%</div>
+        </div>
+      </div>
+
+      <div class="coin">
+        <div class="coin-logo trx">T</div>
+        <div class="coin-info">
+          <div class="coin-name">TRON</div>
+          <div class="coin-amount">1,500 TRX</div>
+        </div>
+        <div class="coin-value">
+          <div class="coin-usd">$333.00</div>
+          <div class="coin-change">+0.8%</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="activity">
+    <div class="section-heading">
+      <h2>Recent activity</h2>
+      <button class="text-btn" onclick="showModal('Transaction history')">
+        See all
+      </button>
+    </div>
+
+    <div class="activity-card">
+      <div class="activity-icon">↓</div>
+      <div class="activity-info">
+        <strong>Received Bitcoin</strong>
+        <span>Today · Completed</span>
+      </div>
+      <div class="activity-value">+0.005 BTC</div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="setNav(this,'Home')">
+    <span>⌂</span>
+    <span>Home</span>
+  </button>
+
+  <button class="nav-item" onclick="setNav(this,'Trade')">
+    <span>⇄</span>
+    <span>Trade</span>
+  </button>
+
+  <button class="nav-item" onclick="setNav(this,'Activity')">
+    <span>◷</span>
+    <span>Activity</span>
+  </button>
+
+  <button class="nav-item" onclick="setNav(this,'Settings')">
+    <span>⚙</span>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <h2 id="modalTitle">Wallet</h2>
+    <p id="modalText"></p>
+    <button class="modal-close" onclick="closeModal()">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+let balanceHidden = false;
+
+function toggleBalance() {
+  balanceHidden = !balanceHidden;
+
+  document.getElementById("totalBalance").textContent =
+    balanceHidden ? "••••••••" : "$15,841.02";
+
+  document.getElementById("eyeBtn").textContent =
+    balanceHidden ? "◎" : "◉";
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+
+  const light = document.body.classList.contains("light");
+
+  document.getElementById("themeIcon").textContent =
+    light ? "☾" : "☼";
+}
+
+function showModal(action) {
+  const descriptions = {
+    Buy: "Buying cryptocurrency is not connected in this demo.",
+    Swap: "Token swapping is not connected to a blockchain.",
+    Send: "Sending is disabled. No cryptocurrency will be transferred.",
+    Receive: "This demo does not have a real wallet address.",
+    Settings: "Wallet settings and preferences.",
+    "All assets": "Your demonstration wallet assets are displayed here.",
+    "Transaction history": "This is sample transaction activity.",
+    Trade: "Trading is not connected in this demo.",
+    Activity: "Sample transaction history."
+  };
+
+  document.getElementById("modalTitle").textContent = action;
+
+  document.getElementById("modalText").textContent =
+    descriptions[action] || "This is a demonstration feature.";
+
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(event) {
+  if (!event || event.target.id === "modal") {
+    document.getElementById("modal").classList.remove("show");
+  }
+}
+
+function setTab(button, tab) {
+  document.querySelectorAll(".tab").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  if (tab !== "Crypto") {
+    showModal(tab + " section");
+
+    document.getElementById("modalText").textContent =
+      tab + " assets are not included in this demo.";
+  }
+}
+
+function setNav(button, page) {
+  document.querySelectorAll(".nav-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  if (page !== "Home") {
+    showModal(page);
+  }
+}
+</script>
+
+</body>
+</html>
